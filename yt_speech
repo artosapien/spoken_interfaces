@@ -1,0 +1,155 @@
+import speech_recognition as sr
+import pyautogui as pg
+import time as t
+
+recog = sr.Recognizer()
+
+def chrome(text):
+    if "open chrome" in text:
+        img = pg.locateCenterOnScreen('chrome.png', grayscale=False)
+        if img:
+            t.sleep(0.5)
+            pg.click(img)
+        else:
+            print("Unable to locate chrome")
+
+def close_tab(text):
+    if "close tab" in text:
+        img = pg.locateCenterOnScreen('close_tab.png')
+        if img:
+            t.sleep(0.5)
+            pg.click(img)
+        else:
+            print("Unable to close tab")
+
+def new_tab(text):
+    if "new tab" in text:
+        img = pg.locateCenterOnScreen('new_tab.png')
+        if img:
+            t.sleep(0.5)
+            pg.click(img)
+        else:
+            print("Unable to open new tab")
+    
+def open_yt(text):
+    if "open youtube" in text:
+        img = pg.locateCenterOnScreen('url.png')
+        if img:
+            pg.click(img)
+            t.sleep(0.5)
+            pg.write('https://www.youtube.com/')
+            pg.press('enter')
+        else:
+            print("Unable to open youtube")
+    
+def yt_search(text):
+    if "search in youtube" in text:
+        img = pg.locateCenterOnScreen('yt_search.png')
+        if img:
+            t.sleep(0.5)
+            pg.click(img)
+        else:
+            print("Unable to search in youtube")
+
+def typer(text):
+    if "type" in text:
+        text = text.replace("type", "").strip()
+        pg.write(text)
+        pg.press('enter')
+    else:
+        print("No text to be typed")
+
+def clear_search(text):
+       if "clear search" in text:
+           pg.moveTo(x=1155,y= 20)
+           t.sleep(0.25)
+           pg.click()
+           pg.moveTo(x=1400,y=20)
+           t.sleep(0.25)
+           pg.click()
+
+def l_click(text):
+    if "select video" in text:
+        pg.click()
+
+def yt_home(text):
+    if "youtube home" in text:
+        img = pg.locateCenterOnScreen('yt_home.png')
+        if img:
+            t.sleep(0.5)
+            pg.click(img)
+        else:
+            print("Unable to go to homepage")
+
+def move_right(text):
+    if "move right" in text:
+        pg.move(30, 0)
+    
+def move_left(text):
+    if "move left" in text:
+        pg.move(-30, 0)
+    
+def vid_select(text):
+    if "video selection" in text:
+        pg.moveTo(x=680, y=250)
+    
+def move_up(text):
+    if "move up" in text:
+        pg.move(0, -30)
+    
+def move_down(text):
+    if "move down" in text:
+        pg.move(0, 30)
+    
+def scroll_up(text):
+    if "scroll up" in text:
+        pg.scroll(300)
+    
+def scroll_down(text):
+    if "scroll down" in text:
+        pg.scroll(-300)
+
+def main():
+    with sr.Microphone() as mic:
+        recog.adjust_for_ambient_noise(mic, duration= 0.2)
+        audio = recog.listen(mic)
+
+        try:
+            text = recog.recognize_google(audio)
+            text = text.lower()
+
+
+            print(f"Recognised Text: {text}")
+
+            chrome(text)
+            close_tab(text)
+            new_tab(text)
+            open_yt(text)
+            yt_search(text)
+            typer(text)
+            l_click(text)
+            yt_home(text)
+            move_right(text)
+            move_left(text)
+            vid_select(text)
+            move_up(text)
+            move_down(text)
+            scroll_up(text)
+            scroll_down(text)
+            clear_search(text)
+
+            if "end the program" in text:
+                print("Ending Program..")
+                return False
+
+            return True
+        
+        except sr.UnknownValueError:
+            print("Unrecognised Text")
+
+        return True
+
+while True:
+    go = main()
+    if not go:
+        break
